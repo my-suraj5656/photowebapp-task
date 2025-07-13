@@ -3,15 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchPhotos } from "../redux/slices/photo";
 import Navbar from "../components/Listing/Navbar";
 import SearchSortFilters from "../components/Listing/SearchSortFilters";
-import { Box, Grid, Typography, Button } from "@mui/material";
+import { Box, Grid, Typography, Button, CircularProgress } from "@mui/material";
 import PhotoCard from "../components/Listing/PhotoCard";
 import { useNavigate } from "react-router-dom";
 import LeftSlider from "../components/Listing/Slider";
 
 const Listing = () => {
-  const { items } = useSelector((s) => s.photographers);
+  const { items, status, error } = useSelector((s) => s.photographers);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // console.log(items, status, error);
 
   const [filter, setFilter] = useState({
     search: "",
@@ -127,30 +129,34 @@ const Listing = () => {
 
         {/* right side Grid */}
         <Box sx={{ flex: 1 }}>
-          <Grid container spacing={4} justifyContent="center">
-            {filteredData.length > 0 ? (
-              filteredData.slice(0, visibleCount).map((card) => (
+          {status === "loading" ? (
+            <Box sx={{ display: "flex", justifyContent: "center", my: 6 }}>
+              <CircularProgress />
+            </Box>
+          ) : filteredData.length > 0 ? (
+            <Grid container spacing={4} justifyContent="center">
+              {filteredData.slice(0, visibleCount).map((card) => (
                 <Grid item key={card.id} xs={12} sm={6} md={6} lg={4}>
                   <PhotoCard
                     card={card}
                     onViewProfile={() => navigate(`/profile/${card.id}`)}
                   />
                 </Grid>
-              ))
-            ) : (
-              <Box sx={{ textAlign: "center", width: "100%", mt: 4 }}>
-                <Typography variant="h6" fontWeight={500}>
-                  😔 No results found
-                </Typography>
-                <Typography variant="body2">
-                  Try adjusting your filters or search terms.
-                </Typography>
-              </Box>
-            )}
-          </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Box sx={{ textAlign: "center", width: "100%", mt: 4 }}>
+              <Typography variant="h6" fontWeight={500}>
+                😔 No results found
+              </Typography>
+              <Typography variant="body2">
+                Try adjusting your filters or search terms.
+              </Typography>
+            </Box>
+          )}
 
           {/* Load More Button */}
-          {filteredData.length > visibleCount && (
+          {status === "idle" && filteredData.length > visibleCount && (
             <Box textAlign="center" mt={4}>
               <Button
                 variant="outlined"
