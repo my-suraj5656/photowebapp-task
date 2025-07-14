@@ -23,6 +23,7 @@ const Listing = () => {
     styles: [],
     city: "",
   });
+  // console.log(filter.city);
 
   const [debouncedSearch, setDebouncedSearch] = useState(filter.search);
   const [isDrawerOpen, setisDrawerOpen] = useState(false);
@@ -94,10 +95,7 @@ const Listing = () => {
 
   return (
     <Box className="min-h-screen">
-      <Navbar
-        title="Best Maternity Photoshoot Services Bengaluru"
-        count={items.length}
-      />
+      <Navbar title={filter.city} count={items.length} />
 
       <SearchSortFilters
         filters={filter}

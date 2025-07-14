@@ -74,7 +74,7 @@ const LeftSlider = ({
 
   const commonui = () => {
     return (
-      <div>
+      <div onClick={() => setIsDrawerOpen(false)}>
         {/* Price Range Slider */}
         <div className="mb-6 w-full">
           <Typography variant="subtitle1" gutterBottom>
